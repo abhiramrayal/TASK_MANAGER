@@ -2,100 +2,95 @@
 
 import json
 
-class Task:
-    def __init__(self, task_id, title, completed=False):
-        self.id = task_id
-        self.title = title
-        self.completed = completed
+class task1:
+    def __init__(self, ID, task_tittle, complete=False):
+        self.ID = ID
+        self.task_tittle = task_tittle
+        self.complete_status = complete
 
-    def to_dict(self):
-        return {'id': self.id, 'title': self.title, 'completed': self.completed}
+    def     To_dict(self):
+        return {'ID': self.ID, 'task_tittle': self.task_tittle, 'complete': self.complete_status}
 
     @staticmethod
-    def from_dict(task_data):
-        return Task(task_data['id'], task_data['title'], task_data['completed'])
+    def dict1(task_data):
+        return task1(task_data['ID'], task_data['task_tittle'], task_data['complete'])
 
 class TaskManager:
-    def __init__(self, filename='tasks.json'):
-        self.filename = filename
-        self.tasks = []
-        self.load_tasks()
+    def __init__(self, file_name='out_file.json'):
+        self.file_name = file_name
+        self.out_file = []
+        self.load()
 
-    def load_tasks(self):
+    def load(self):
         try:
-            with open(self.filename, 'r') as file:
+            with open(self.file_name, 'r') as file:
                 task_list = json.load(file)
-                self.tasks = [Task.from_dict(task) for task in task_list]
+                self.out_file = [task1.dict1(task) for task in task_list]
         except (FileNotFoundError, json.JSONDecodeError):
-            self.tasks = []
+            self.out_file = []
 
 
-    def save_tasks(self):
-        with open(self.filename, 'w') as file:
-            json.dump([task.to_dict() for task in self.tasks], file)
+    def save(self):
+        with open(self.file_name, 'w') as file:
+            json.dump([task.    To_dict() for task in self.out_file], file)
             
-    def add_task(self, title):
-        task_id = len(self.tasks) + 1
-        task = Task(task_id, title)
-        self.tasks.append(task)
-        self.save_tasks()
-        print(f"Task '{title}' added successfully.")
+    def add(self, task_tittle):
+        ID = len(self.out_file) + 1
+        task = task1(ID, task_tittle)
+        self.out_file.append(task)
+        self.save()
+        print(f"Task '{task_tittle}' added successfully.")
 
-    def view_tasks(self):
-        if not self.tasks:
+    def view(self):
+        if not self.out_file:
             print("No tasks available.")
         else:
-            for task in self.tasks:
-                status = "Completed" if task.completed else "Pending"
-                print(f"ID: {task.id} | Title: {task.title} | Status: {status}")
+            for task in self.out_file:
+                status = "Complete" if task.complete_status else "Pending"
+                print(f"ID: {task.ID} | task_tittle: {task.task_tittle} | Status: {status}")
 
-    def delete_task(self, task_id):
-        self.tasks = [task for task in self.tasks if task.id != task_id]
-        self.save_tasks()
-        print(f"Task ID {task_id} deleted successfully.")
+    def remove(self, ID):
+        self.out_file = [task for task in self.out_file if task.ID != ID]
+        self.save()
+        print(f"Task ID {ID} deleted successfully.")
 
-    def complete_task(self, task_id):
-        for task in self.tasks:
-            if (task.id == task_id ):
-                task.completed = True
-                self.save_tasks()
-                print(f"Task ID {task_id,task.title} marked as completed.")
+    def edit_status(self, ID):
+        for task in self.out_file:
+            if (task.ID == ID ):
+                task.complete_status = True
+                self.save()
+                print(f"Task ID {ID,task.task_tittle} marked as complete.")
                 
-        print(f"No task found with ID {task_id}.")
+        print(f"No task found with ID {ID}.")
 
     def run(self):
         while True:
-            print("\nTask Manager")
-            print("1. Add Task")
-            print("2. View Tasks")
-            print("3. Delete Task")
-            print("4. Mark Task as Complete")
-            print("5. Exit")
-            choice = input("Choose an option: ")
+        
+            abc = input("\n1 for add  task \n2 for view task\n3 for delete task\n4 edit status\n5 to stop\nChoose an option: ")
 
-            if choice == '1':
-                title = input("Enter task title: ")
-                self.add_task(title)
-            elif choice == '2':
-                self.view_tasks()
-            elif choice == '3':
+            if abc == '1':
+                task_tittle = input(" give tittle name  ")
+                self.add(task_tittle)
+            elif abc == '2':
+                self.view()
+            elif abc == '3':
                 try:
-                    task_id = int(input("Enter task ID to delete: "))
-                    self.delete_task(task_id)
+                    ID = int(input("enter ID to remove task "))
+                    self.remove(ID)
                 except ValueError:
-                    print("Invalid ID.")
-            elif choice == '4':
+                    print("enter valid ID")
+            elif abc == '4':
                 try:
-                    task_id = int(input("Enter task ID to mark as complete: "))
-                    self.complete_task(task_id)
+                    ID = int(input("enter the ID to change status"))
+                    self.edit_status(ID)
                 except ValueError:
-                    print("Invalid ID.")
-            elif choice == '5':
-                print("Exiting Task Manager.")
+                    print("enter valid ID")
+            elif abc == '5':
+                print("complete the process")
                 break
             else:
-                print("Invalid choice. Please try again.")
+                print("\nenter in range off 1 to 5 ")
 
 if __name__ == "__main__":
-    task_manager = TaskManager()
-    task_manager.run()
+    task_manager_1 = TaskManager()
+    task_manager_1.run()
